@@ -1,0 +1,370 @@
+# 📈 AI-Powered Investment Allocation & ETF Recommendation Agent
+
+An AI-powered investment planning application that generates educational asset-allocation recommendations and ETF suggestions based on a user's **age, financial goal, investment horizon, and risk tolerance**.
+
+The project uses **LangGraph** to build a multi-step agentic workflow, **Groq LLM** for intelligent recommendations, **FastAPI** for the backend API, and **Streamlit** for the interactive frontend.
+
+> ⚠️ **Disclaimer:** This project is for educational and demonstration purposes only. It does not provide professional financial advice or guarantee investment returns.
+
+---
+
+## 🚀 Project Overview
+
+The application follows a multi-step AI workflow:
+
+```text
+User Profile
+     ↓
+Profile Collection
+     ↓
+Asset Allocation
+     ↓
+ETF Recommendation
+     ↓
+Final Investment Plan
+```
+
+The user provides:
+
+* Age
+* Financial goal
+* Investment horizon
+* Risk tolerance
+
+The system then:
+
+1. Collects and structures the user's profile.
+2. Generates an asset allocation across **stocks, bonds, and cash**.
+3. Recommends suitable **ETFs** based on the generated allocation.
+4. Displays the results through an interactive Streamlit interface.
+
+---
+
+## 🧠 Agentic Workflow
+
+The project uses **LangGraph** to organize the application into multiple workflow nodes.
+
+### 1. Profile Collection
+
+The `collector.py` module collects the user's:
+
+* Age
+* Goal
+* Investment horizon
+* Risk tolerance
+
+and stores them as a structured profile.
+
+### 2. Asset Allocation
+
+The `suggest.py` module sends the user's profile to the Groq-powered LLM.
+
+The model generates a target allocation across:
+
+* Stocks
+* Bonds
+* Cash
+
+The allocation is designed to reflect the user's investment horizon, goal, and risk tolerance.
+
+### 3. ETF Recommendation
+
+The `rec.py` module takes the generated allocation and recommends suitable ETFs.
+
+The recommendations consider:
+
+* Diversification
+* Expense ratios
+* Liquidity
+* Simplicity
+* Long-term suitability
+
+Individual stocks are not recommended.
+
+---
+
+## 🏗️ Architecture
+
+```text
+                    ┌─────────────────────┐
+                    │  Streamlit Frontend │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │    FastAPI API      │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │     LangGraph       │
+                    │   Agent Workflow    │
+                    └──────────┬──────────┘
+                               │
+                ┌──────────────┼──────────────┐
+                ▼              ▼              ▼
+        ┌──────────────┐ ┌─────────────┐ ┌───────────────┐
+        │   Profile    │ │ Allocation  │ │ ETF           │
+        │  Collection  │ │ Suggestion  │ │ Recommendation│
+        └──────────────┘ └──────┬──────┘ └───────┬───────┘
+                                │                 │
+                                └────────┬────────┘
+                                         ▼
+                                  ┌─────────────┐
+                                  │  Groq LLM   │
+                                  └─────────────┘
+```
+
+---
+
+## 🛠️ Technologies Used
+
+| Technology        | Purpose                             |
+| ----------------- | ----------------------------------- |
+| **Python**        | Core programming language           |
+| **LangGraph**     | Agentic workflow orchestration      |
+| **LangChain**     | LLM integration                     |
+| **Groq**          | LLM inference                       |
+| **FastAPI**       | Backend REST API                    |
+| **Pydantic**      | Request validation                  |
+| **Streamlit**     | Interactive frontend                |
+| **python-dotenv** | Environment variable management     |
+| **Git & GitHub**  | Version control and project hosting |
+
+---
+
+## 📁 Project Structure
+
+```text
+AI-Investment-Advisor/
+│
+├── app.py              # FastAPI application and LangGraph workflow
+├── collector.py        # User profile collection
+├── suggest.py          # Asset allocation generation
+├── rec.py              # ETF recommendations
+├── config.py           # Environment configuration and LLM setup
+├── streamlit.py        # Streamlit frontend
+├── .gitignore          # Files excluded from Git
+├── README.md           # Project documentation
+└── .env                # API key configuration (not uploaded)
+```
+
+---
+
+## ⚙️ Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/nazneen-fatima/AI-Investment-Advisor.git
+```
+
+### 2. Navigate to the project
+
+```bash
+cd AI-Investment-Advisor
+```
+
+### 3. Create a virtual environment
+
+```bash
+python -m venv venv
+```
+
+### 4. Activate the virtual environment
+
+### Windows
+
+```powershell
+venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
+### 5. Install dependencies
+
+```bash
+pip install fastapi uvicorn python-dotenv langgraph langchain-groq streamlit requests
+```
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+GROQ_API_KEY=your_groq_api_key
+```
+
+**Never commit your `.env` file or expose your API key publicly.**
+
+The `.gitignore` file already excludes `.env`.
+
+---
+
+## ▶️ Running the Application
+
+The application requires two terminals.
+
+### Terminal 1 — Start FastAPI
+
+```powershell
+uvicorn app:app --reload
+```
+
+The API will be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+FastAPI Swagger documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### Terminal 2 — Start Streamlit
+
+```powershell
+streamlit run streamlit.py
+```
+
+The frontend will open at:
+
+```text
+http://localhost:8501
+```
+
+---
+
+## 🧪 Example Input
+
+```json
+{
+  "age": 25,
+  "goal": "wealth creation",
+  "horizon": 10,
+  "risk": "moderate"
+}
+```
+
+### Example Workflow Output
+
+The system may generate an allocation such as:
+
+| Asset Class | Allocation |
+| ----------- | ---------: |
+| Stocks      |        70% |
+| Bonds       |        25% |
+| Cash        |         5% |
+| **Total**   |   **100%** |
+
+It then provides ETF suggestions corresponding to the recommended asset classes.
+
+> The exact allocation and recommendations may vary because they are generated by the LLM based on the provided profile.
+
+---
+
+## 🔌 API Endpoint
+
+### POST `/invest`
+
+The FastAPI backend exposes a REST endpoint for generating an investment plan.
+
+### Request
+
+```json
+{
+  "age": 25,
+  "goal": "wealth creation",
+  "horizon": 10,
+  "risk": "moderate"
+}
+```
+
+### Response
+
+```json
+{
+  "profile": {
+    "age": 25,
+    "goal": "wealth creation",
+    "horizon": 10,
+    "risk": "moderate"
+  },
+  "allocation": "Generated asset allocation...",
+  "recommendations": "Generated ETF recommendations..."
+}
+```
+
+---
+
+## ✨ Key Features
+
+* 🤖 AI-powered investment planning
+* 🧠 LangGraph-based agentic workflow
+* 👤 User profile-based recommendations
+* 📊 Asset allocation across stocks, bonds, and cash
+* 💰 ETF recommendations based on target allocation
+* ⚡ Groq-powered LLM inference
+* 🔌 FastAPI REST API
+* 🎨 Interactive Streamlit frontend
+* 📈 Allocation visualization
+* 🔐 Environment-based API key management
+* 📚 FastAPI Swagger API documentation
+
+---
+
+## 🎯 Learning Outcomes
+
+Through this project, I worked with:
+
+* Agentic AI workflow design
+* LangGraph state-based workflows
+* LLM prompt engineering
+* Groq LLM integration
+* FastAPI REST API development
+* Pydantic request validation
+* Streamlit application development
+* API integration between frontend and backend
+* Environment variable management
+* Git and GitHub version control
+
+---
+
+## 🔮 Future Improvements
+
+Potential improvements include:
+
+* Add user authentication
+* Add persistent database storage
+* Support country-specific investment options
+* Add more asset classes
+* Integrate real-time market data
+* Add portfolio performance tracking
+* Add historical backtesting
+* Improve ETF filtering using live fund data
+* Deploy the application to a cloud platform
+* Add automated testing
+
+---
+
+## 👩‍💻 Author
+
+**Nazneen Fatima**
+
+B.Tech Data Science | Aspiring Data Scientist
+
+GitHub: https://github.com/nazneen-fatima
+
+---
+
+## ⚠️ Disclaimer
+
+This application is developed for **educational and demonstration purposes**. The generated asset allocations and ETF recommendations are not personalized financial advice. Users should conduct their own research and consult a qualified financial professional before making investment decisions.
